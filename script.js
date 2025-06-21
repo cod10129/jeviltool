@@ -49,9 +49,10 @@ function updateSpareConditions() {
     const tiredIndicator = document.getElementById("tiredness-indicator");
     tiredIndicator.textContent = `${jevil.tiredness}/9`;
     const isTooTired = jevil.tiredness >= 9;
-    // TODO make this revert when exiting preview of a sparable state
     if (isTooTired) {
         tiredIndicator.className = "highlightpositive";
+    } else {
+        tiredIndicator.className = "";
     }
 
     const turnIndicator = document.getElementById("turn-elapsed-indicator");
@@ -60,17 +61,27 @@ function updateSpareConditions() {
     const spentTooLong = turnsElapsed >= requiredTurns && battlePhase === 5;
     if (spentTooLong) {
         turnIndicator.className = "highlightpositive";
+    } else {
+        turnIndicator.className = "";
     }
 
     if (isTooTired || spentTooLong) {
         setSparable();
+    } else {
+        setUnsparable();
     }
 }
 
 function setSparable() {
-    const el = document.getElementById("can-spare-text")
+    const el = document.getElementById("can-spare-text");
     el.textContent = "CAN";
     el.className = "highlightpositive";
+}
+
+function setUnsparable() {
+    const el = document.getElementById("can-spare-text");
+    el.textContent = "cannot";
+    el.className = "";
 }
 
 function updatePirouette() {
