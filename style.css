@@ -29,6 +29,14 @@ a {
     color: lime;
 }
 
+#tiredness-indicator {
+    font-weight: bold;
+}
+
+#turn-elapsed-indicator {
+    font-weight: bold;
+}
+
 #topheader {
     font-size: 42px;
     margin-bottom: 0px;

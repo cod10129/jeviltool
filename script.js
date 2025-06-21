@@ -44,13 +44,21 @@ function recomputeBattlePhase() {
 }
 
 function updateSpareConditions() {
-    document.getElementById("tiredness").textContent = jevil.tiredness;
-    document.getElementById("elapsed-turns").textContent = turnsElapsed;
-    const requiredTurns = 30 - Math.floor(jevil.tiredness);
-    document.getElementById("turns-required").textContent = requiredTurns;
-
+    const tiredIndicator = document.getElementById("tiredness-indicator");
+    tiredIndicator.textContent = `${jevil.tiredness}/9`;
     const isTooTired = jevil.tiredness >= 9;
+    if (isTooTired) {
+        tiredIndicator.className = "lime";
+    }
+
+    const turnIndicator = document.getElementById("turn-elapsed-indicator");
+    const requiredTurns = 30 - Math.floor(jevil.tiredness);
+    turnIndicator.textContent = `${turnsElapsed}/${requiredTurns}`;
     const spentTooLong = turnsElapsed >= requiredTurns && battlePhase === 5;
+    if (spentTooLong) {
+        turnIndicator.className = "lime";
+    }
+
     if (isTooTired || spentTooLong) {
         setSparable();
     }
