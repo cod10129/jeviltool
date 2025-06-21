@@ -37,6 +37,10 @@ a {
     font-weight: bold;
 }
 
+#next-attack {
+    text-decoration: yellow underline;
+}
+
 #topheader {
     font-size: 42px;
     margin-bottom: 0px;

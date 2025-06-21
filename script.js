@@ -18,12 +18,17 @@ function advanceTurn() {
     const previousPhase = battlePhase;
     recomputeBattlePhase();
     if (previousPhase !== battlePhase) {
-        turnsOnCurrentPhase = 1;
+        if (turnsOnCurrentPhase < 5) {
+            turnsOnCurrentPhase = 1;
+        } else {
+            turnsOnCurrentPhase = 2;
+        }
     }
     document.getElementById("phase-num").textContent = battlePhase;
 
     updateSpareConditions();
     updatePirouette();
+    updateNextAttack();
 }
 
 function recomputeBattlePhase() {
@@ -90,6 +95,31 @@ function updatePirouette() {
     } else {
         el.className = "highlightpositive";
     }
+}
+
+function updateNextAttack() {
+    const attackTable = [
+        // Dummy entries so no off-by-one issues
+        [],
+        ["", "Five-Spade", "Spiral I", "Heart Bombs", "Devilsknife I"],
+        ["", "Carousel I", "Three-Club Bombs", "Diamonds Rising", "Spiral II"],
+        ["", "BS Carousel (II)", "Spade Bombs", "Club Bursts", "Devilsknife II"],
+        ["", "Single Diamonds", "CHAOS BOMB", "Fakeout Attack", "FINAL CHAOS"],
+    ];
+    let attackText = "This text should not appear.";
+    if (battlePhase < 5) {
+        const curPhaseAttacks = attackTable[battlePhase];
+        if (turnsOnCurrentPhase < 5) {
+            attackText = curPhaseAttacks[turnsOnCurrentPhase];
+        } else {
+            attackText = `Random Phase ${battlePhase} attack`;
+            attackText += ` (one of ${curPhaseAttacks[1]}, ${curPhaseAttacks[2]}, 
+                ${curPhaseAttacks[3]}, or ${curPhaseAttacks[4]})`;
+        }
+    } else {
+        attackText = "Randomly chosen from ALL attacks";
+    }
+    document.getElementById("next-attack").textContent = attackText;
 }
 
 //---------------------//
