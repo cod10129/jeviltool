@@ -23,6 +23,7 @@ function advanceTurn() {
     document.getElementById("phase-num").textContent = battlePhase;
 
     updateSpareConditions();
+    updatePirouette();
 }
 
 function recomputeBattlePhase() {
@@ -58,8 +59,34 @@ function updateSpareConditions() {
 function setSparable() {
     const el = document.getElementById("can-spare-text")
     el.textContent = "CAN";
-    el.className = "sparable";
+    el.className = "lime";
 }
+
+function updatePirouette() {
+    const effectTable = [
+        [false, "36-50 HP heal to all party members"],
+        [false, "No combat effect (random SFX)"],
+        [false, "Lowers Jevil's Defense by 4"],
+        [true, "60% less invincibility for the turn"],
+        [false, "Lowers Jevil's Attack by 30% for the turn"],
+        [false, "No combat effect (bird flies)"],
+        [false, "25-55 HP heal to a random party member"],
+        [true, "Party's HP bars are shuffled"],
+        [true, "Increases Jevil's Attack by 25% for the turn"],
+    ];
+    const [isNegative, effectDescription] = effectTable[turnsElapsed % 9];
+    const el = document.getElementById("piro-effect");
+    el.textContent = effectDescription;
+    if (isNegative) {
+        el.className = "red";
+    } else {
+        el.className = "lime";
+    }
+}
+
+//---------------------//
+// ON-LOAD INITIALIZER //
+//---------------------//
 
 function onLoad() {
     document.getElementById("pirouette").addEventListener("click", () => {
