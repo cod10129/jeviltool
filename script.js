@@ -97,17 +97,9 @@ function updatePirouette() {
 //---------------------//
 
 function onLoad() {
-    document.getElementById("pirouette").addEventListener("click", () => {
-        jevil.tiredness += 0.5;
-        advanceTurn();
-    });
-    document.getElementById("hypnosis").addEventListener("click", () => {
-        jevil.tiredness += 1;
-        advanceTurn();
-    });
-    document.getElementById("turn-none").addEventListener("click", () => {
-        advanceTurn();
-    });
+    document.getElementById("pirouette").addEventListener("click", () => {});
+    document.getElementById("hypnosis").addEventListener("click", () => {});
+    document.getElementById("turn-none").addEventListener("click", () => {});
 
     advanceTurn();
 }
