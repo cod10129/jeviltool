@@ -17,6 +17,18 @@ a {
     margin: 8px 0;
 }
 
+.sparelist {
+    margin: 8px 0;
+}
+
+.nonsparable {
+    color: red;
+}
+
+.sparable {
+    color: lime;
+}
+
 #topheader {
     font-size: 42px;
     margin-bottom: 0px;
