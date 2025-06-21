@@ -13,15 +13,17 @@ function advanceTurn() {
     turnsElapsed += 1;
     turnsOnCurrentPhase += 1;
 
-    document.getElementById("turn-num").textContent = turnsElapsed;
-
     const previousPhase = battlePhase;
-    recomputeBattlePhase();
+    updateVisibleState();
     if (previousPhase !== battlePhase) {
         turnsOnCurrentPhase = 1;
     }
-    document.getElementById("phase-num").textContent = battlePhase;
+}
 
+function updateVisibleState() {
+    document.getElementById("turn-num").textContent = turnsElapsed;
+    recomputeBattlePhase();
+    document.getElementById("phase-num").textContent = battlePhase;
     updateSpareConditions();
     updatePirouette();
 }
@@ -47,6 +49,7 @@ function updateSpareConditions() {
     const tiredIndicator = document.getElementById("tiredness-indicator");
     tiredIndicator.textContent = `${jevil.tiredness}/9`;
     const isTooTired = jevil.tiredness >= 9;
+    // TODO make this revert when exiting preview of a sparable state
     if (isTooTired) {
         tiredIndicator.className = "highlightpositive";
     }
@@ -98,28 +101,63 @@ function showPreviewing(thing) {
     document.getElementById("preview-action").textContent = thing;
 }
 
+function actionClickImpl(name, tired) {
+    loadPreviewState();
+
+    showPreviewing(name);
+    jevil.tiredness += tired;
+    updateVisibleState();
+}
+
+var previewState = null;
+
+function savePreviewState() {
+    previewState = {
+        turns: turnsElapsed,
+        curPhaseTurns: turnsOnCurrentPhase,
+        phase: battlePhase,
+        tiredness: jevil.tiredness,
+    };
+}
+
+function loadPreviewState() {
+    turnsElapsed = previewState.turns;
+    turnsOnCurrentPhase = previewState.curPhaseTurns;
+    battlePhase = previewState.phase;
+    jevil.tiredness = previewState.tiredness;
+}
+
 //---------------------//
 // ON-LOAD INITIALIZER //
 //---------------------//
 
 function onLoad() {
     document.getElementById("pirouette").addEventListener("click", () => {
-        showPreviewing("Pirouette");
+        actionClickImpl("Pirouette", 0.5);
     });
     document.getElementById("hypnosis").addEventListener("click", () => {
-        showPreviewing("Hypnosis");
+        actionClickImpl("Hypnosis", 1);
     });
     document.getElementById("turn-none").addEventListener("click", () => {
-        showPreviewing("No ACT");
+        actionClickImpl("No ACT", 0);
     });
     document.getElementById("stop-preview").addEventListener("click", () => {
         document.getElementById("pirouette").checked = false;
         document.getElementById("hypnosis").checked = false;
         document.getElementById("turn-none").checked = false;
         document.getElementById("preview-header").hidden = true;
+        loadPreviewState();
+        updateVisibleState();
+    });
+    document.getElementById("action-submit").addEventListener("click", () => {
+        // TODO implement this
+        // The tiredness effect has already been applied in `actionClickImpl`
+        // Next, actually advance the turn state
+        // And save that state as the new `previewState`.
     });
 
     advanceTurn();
+    savePreviewState();
 }
 
 window.addEventListener("load", onLoad);
