@@ -9,15 +9,19 @@ a {
     color: cyan;
 }
 
+fieldset {
+    width: fit-content;
+}
+
+fieldset div {
+    margin: 2px 0;
+}
+
 .datablock {
     margin: 32px 0;
 }
 
-.datablock p {
-    margin: 8px 0;
-}
-
-.sparelist {
+.datablock > * {
     margin: 8px 0;
 }
 
@@ -27,6 +31,14 @@ a {
 
 .highlightpositive {
     color: lime;
+}
+
+.highlightneutral {
+    color: orange;
+}
+
+#action-submit {
+    margin: 8px 0 0;
 }
 
 #tiredness-indicator {
