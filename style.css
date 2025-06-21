@@ -21,11 +21,11 @@ a {
     margin: 8px 0;
 }
 
-.red {
+.highlightnegative {
     color: red;
 }
 
-.lime {
+.highlightpositive {
     color: lime;
 }
 

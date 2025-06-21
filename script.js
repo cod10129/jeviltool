@@ -48,7 +48,7 @@ function updateSpareConditions() {
     tiredIndicator.textContent = `${jevil.tiredness}/9`;
     const isTooTired = jevil.tiredness >= 9;
     if (isTooTired) {
-        tiredIndicator.className = "lime";
+        tiredIndicator.className = "highlightpositive";
     }
 
     const turnIndicator = document.getElementById("turn-elapsed-indicator");
@@ -56,7 +56,7 @@ function updateSpareConditions() {
     turnIndicator.textContent = `${turnsElapsed}/${requiredTurns}`;
     const spentTooLong = turnsElapsed >= requiredTurns && battlePhase === 5;
     if (spentTooLong) {
-        turnIndicator.className = "lime";
+        turnIndicator.className = "highlightpositive";
     }
 
     if (isTooTired || spentTooLong) {
@@ -67,7 +67,7 @@ function updateSpareConditions() {
 function setSparable() {
     const el = document.getElementById("can-spare-text")
     el.textContent = "CAN";
-    el.className = "lime";
+    el.className = "highlightpositive";
 }
 
 function updatePirouette() {
@@ -86,9 +86,9 @@ function updatePirouette() {
     const el = document.getElementById("piro-effect");
     el.textContent = effectDescription;
     if (isNegative) {
-        el.className = "red";
+        el.className = "highlightnegative";
     } else {
-        el.className = "lime";
+        el.className = "highlightpositive";
     }
 }
 
