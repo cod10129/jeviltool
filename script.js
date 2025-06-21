@@ -25,12 +25,13 @@ function advanceTurn() {
     updateSpareConditions();
 }
 
-// TODO - Implement some way of entering phase 5
 function recomputeBattlePhase() {
     // Don't exit from Phase 5
     if (battlePhase === 5) { return }
 
-    if (jevil.tiredness >= 6) {
+    if (battlePhase === 4 && turnsOnCurrentPhase === 5) {
+        battlePhase = 5;
+    } else if (jevil.tiredness >= 6) {
         battlePhase = 4;
     } else if (jevil.tiredness >= 4) {
         battlePhase = 3;
@@ -47,7 +48,9 @@ function updateSpareConditions() {
     const requiredTurns = 30 - Math.floor(jevil.tiredness);
     document.getElementById("turns-required").textContent = requiredTurns;
 
-    if (jevil.tiredness >= 9 || turnsElapsed >= requiredTurns) {
+    const isTooTired = jevil.tiredness >= 9;
+    const spentTooLong = turnsElapsed >= requiredTurns && battlePhase === 5;
+    if (isTooTired || spentTooLong) {
         setSparable();
     }
 }
