@@ -11,10 +11,17 @@ a {
 
 fieldset {
     width: fit-content;
+    margin: 8px 2px;
 }
 
 fieldset div {
     margin: 2px 0;
+}
+
+h2 {
+    margin-bottom: 0;
+    font-weight: normal;
+    color: lightblue;
 }
 
 .datablock {

@@ -92,14 +92,32 @@ function updatePirouette() {
     }
 }
 
+function showPreviewing(thing) {
+    const previewHeader = document.getElementById("preview-header");
+    previewHeader.hidden = false;
+    document.getElementById("preview-action").textContent = thing;
+}
+
 //---------------------//
 // ON-LOAD INITIALIZER //
 //---------------------//
 
 function onLoad() {
-    document.getElementById("pirouette").addEventListener("click", () => {});
-    document.getElementById("hypnosis").addEventListener("click", () => {});
-    document.getElementById("turn-none").addEventListener("click", () => {});
+    document.getElementById("pirouette").addEventListener("click", () => {
+        showPreviewing("Pirouette");
+    });
+    document.getElementById("hypnosis").addEventListener("click", () => {
+        showPreviewing("Hypnosis");
+    });
+    document.getElementById("turn-none").addEventListener("click", () => {
+        showPreviewing("No ACT");
+    });
+    document.getElementById("stop-preview").addEventListener("click", () => {
+        document.getElementById("pirouette").checked = false;
+        document.getElementById("hypnosis").checked = false;
+        document.getElementById("turn-none").checked = false;
+        document.getElementById("preview-header").hidden = true;
+    });
 
     advanceTurn();
 }
