@@ -2,6 +2,8 @@ var turnsElapsed = 0;
 var turnsOnCurrentPhase = 0;
 var battlePhase = 1;
 
+var pirouetteCycleCounter = 0;
+
 /** Representation of Jevil's statistics. */
 var jevil = {
     hp: 3500,
@@ -84,10 +86,15 @@ function setUnsparable() {
     el.className = "";
 }
 
-// TODO - While previewing, the applied Pirouette effect should be displayed
+function pirouetteCycleStep() {
+    pirouetteCycleCounter += 1;
+    if (pirouetteCycleCounter > 8) {
+        pirouetteCycleCounter = 0;
+    }
+}
+
 function updatePirouette() {
     const effectTable = [
-        [false, "36-50 HP heal to all party members"],
         [false, "No combat effect (random SFX)"],
         [false, "Lowers Jevil's Defense by 4"],
         [true, "60% less invincibility for the turn"],
@@ -96,8 +103,9 @@ function updatePirouette() {
         [false, "25-55 HP heal to a random party member"],
         [true, "Party's HP bars are shuffled"],
         [true, "Increases Jevil's Attack by 25% for the turn"],
+        [false, "36-50 HP heal to all party members"],
     ];
-    const [isNegative, effectDescription] = effectTable[turnsElapsed % 9];
+    const [isNegative, effectDescription] = effectTable[pirouetteCycleCounter];
     const el = document.getElementById("piro-effect");
     el.textContent = effectDescription;
     if (isNegative) {
@@ -110,6 +118,7 @@ function updatePirouette() {
 function actionClickImpl(name, tired) {
     loadPreviewState();
 
+    document.getElementById("piro-preview-info").hidden = true;
     document.getElementById("preview-header").hidden = false;
     document.getElementById("preview-action").textContent = name;
     jevil.tiredness += tired;
@@ -134,10 +143,13 @@ function loadPreviewState() {
     jevil.tiredness = previewState.tiredness;
 }
 
-function clearActionSelectors() {
+function hidePreviewIndicators() {
     document.getElementById("pirouette").checked = false;
     document.getElementById("hypnosis").checked = false;
     document.getElementById("turn-none").checked = false;
+
+    document.getElementById("preview-header").hidden = true;
+    document.getElementById("piro-preview-info").hidden = true;
 }
 
 //---------------------//
@@ -147,6 +159,7 @@ function clearActionSelectors() {
 function onLoad() {
     document.getElementById("pirouette").addEventListener("click", () => {
         actionClickImpl("Pirouette", 0.5);
+        document.getElementById("piro-preview-info").hidden = false;
     });
     document.getElementById("hypnosis").addEventListener("click", () => {
         actionClickImpl("Hypnosis", 1);
@@ -155,16 +168,18 @@ function onLoad() {
         actionClickImpl("No ACT", 0);
     });
     document.getElementById("stop-preview").addEventListener("click", () => {
-        clearActionSelectors();
-        document.getElementById("preview-header").hidden = true;
+        hidePreviewIndicators();
         loadPreviewState();
         updateVisibleState();
     });
     document.getElementById("action-submit").addEventListener("click", () => {
-        clearActionSelectors();
-        document.getElementById("preview-header").hidden = true;
         // Current state is the new preview state
         savePreviewState();
+
+        hidePreviewIndicators();
+
+        pirouetteCycleStep();
+        updateVisibleState();
     });
 
     advanceTurn();

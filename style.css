@@ -21,7 +21,6 @@ fieldset div {
 h2 {
     margin-bottom: 0;
     font-weight: normal;
-    color: lightblue;
 }
 
 .datablock {
@@ -42,6 +41,10 @@ h2 {
 
 .highlightneutral {
     color: orange;
+}
+
+.highlightpreview {
+    color: lightblue;
 }
 
 #action-submit {

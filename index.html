@@ -16,14 +16,20 @@
       needs.
     </p>
 
-    <h2 hidden id="preview-header">
+    <h2 hidden id="preview-header" class="highlightpreview">
       Currently previewing <span id="preview-action"></span>
     </h2>
 
     <div class="datablock">
       <p>Turn: <span id="turn-num">[LOADING]</span></p>
       <p>Phase: <span id="phase-num">[LOADING]</span></p>
-      <p>Pirouette effect: <span id="piro-effect">[LOADING]</span></p>
+      <p>
+        Pirouette effect: <span id="piro-effect">[LOADING]</span>
+        <span hidden class="highlightpreview" id="piro-preview-info">
+          <br />&nbsp;&nbsp;
+          This effect will be applied upon executing this previewed turn.
+        </span>
+      </p>
     </div>
 
     <div class="datablock">
