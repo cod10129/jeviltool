@@ -84,6 +84,7 @@ function setUnsparable() {
     el.className = "";
 }
 
+// TODO - While previewing, the applied Pirouette effect should be displayed
 function updatePirouette() {
     const effectTable = [
         [false, "36-50 HP heal to all party members"],
@@ -106,18 +107,13 @@ function updatePirouette() {
     }
 }
 
-function showPreviewing(thing) {
-    const previewHeader = document.getElementById("preview-header");
-    previewHeader.hidden = false;
-    document.getElementById("preview-action").textContent = thing;
-}
-
 function actionClickImpl(name, tired) {
     loadPreviewState();
 
-    showPreviewing(name);
+    document.getElementById("preview-header").hidden = false;
+    document.getElementById("preview-action").textContent = name;
     jevil.tiredness += tired;
-    updateVisibleState();
+    advanceTurn();
 }
 
 var previewState = null;
@@ -138,6 +134,12 @@ function loadPreviewState() {
     jevil.tiredness = previewState.tiredness;
 }
 
+function clearActionSelectors() {
+    document.getElementById("pirouette").checked = false;
+    document.getElementById("hypnosis").checked = false;
+    document.getElementById("turn-none").checked = false;
+}
+
 //---------------------//
 // ON-LOAD INITIALIZER //
 //---------------------//
@@ -153,18 +155,16 @@ function onLoad() {
         actionClickImpl("No ACT", 0);
     });
     document.getElementById("stop-preview").addEventListener("click", () => {
-        document.getElementById("pirouette").checked = false;
-        document.getElementById("hypnosis").checked = false;
-        document.getElementById("turn-none").checked = false;
+        clearActionSelectors();
         document.getElementById("preview-header").hidden = true;
         loadPreviewState();
         updateVisibleState();
     });
     document.getElementById("action-submit").addEventListener("click", () => {
-        // TODO implement this
-        // The tiredness effect has already been applied in `actionClickImpl`
-        // Next, actually advance the turn state
-        // And save that state as the new `previewState`.
+        clearActionSelectors();
+        document.getElementById("preview-header").hidden = true;
+        // Current state is the new preview state
+        savePreviewState();
     });
 
     advanceTurn();
