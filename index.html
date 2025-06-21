@@ -4,12 +4,28 @@
     <meta charset="utf-8" />
     <title>Jeviltool</title>
     <link href="style.css" rel="stylesheet"/>
+    <link href="jevil.png" rel="icon" sizes="84x84" />
   </head>
   <body>
     <h1 id="topheader">
-      <img src="jevil.png" alt="Jevil"
-        width="42" height="42"/>Tool
+    <img src="jevil.png" alt="Jevil"
+      width="42" height="42"/>Tool
     </h1>
-    <p>For all your JEVIL-fighting needs.</p>
+    <p>For all your 
+      <a href="https://deltarune.wiki/w/Jevil" target="_blank">JEVIL</a>-fighting 
+      needs.
+    </p>
+
+    <div class="datablock">
+      <p>Current turn: <span id="turn-num">[LOADING]</span></p>
+      <p>Current phase: <span id="phase-num">[LOADING]</span></p>
+    </div>
+
+    <p>Select the ACTion you performed this turn:</p>
+    <button type="button" id="pirouette">Pirouette</button>
+    <button type="button" id="hypnosis">Hypnosis</button>
+    <button type="button" id="turn-none">Advance Turn</button>
+
+    <script src="script.js"></script>
   </body>
 </html>
