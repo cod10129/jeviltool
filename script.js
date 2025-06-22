@@ -94,31 +94,17 @@ function pirouetteCycleStep() {
 }
 
 function updatePirouette() {
-    const effectTable = [
-        [false, "No combat effect (random SFX)"],
-        [false, "Lowers Jevil's Defense by 4"],
-        [true, "60% less invincibility for the turn"],
-        [false, "Lowers Jevil's Attack by 30% for the turn"],
-        [false, "No combat effect (bird flies)"],
-        [false, "25-55 HP heal to a random party member"],
-        [true, "Party's HP bars are shuffled"],
-        [true, "Increases Jevil's Attack by 25% for the turn"],
-        [false, "36-50 HP heal to all party members"],
-    ];
-    const [isNegative, effectDescription] = effectTable[pirouetteCycleCounter];
-    const el = document.getElementById("piro-effect");
-    el.textContent = effectDescription;
-    if (isNegative) {
-        el.className = "highlightnegative";
-    } else {
-        el.className = "highlightpositive";
-    }
+    const effectTable = [false, false, true, false, false, false, true, true, false];
+    const container = document.getElementById("pirouette-table");
+    const selectedEntry = container.children[pirouetteCycleCounter];
+    const highlightClass = effectTable[pirouetteCycleCounter]
+        ? "highlightnegative" : "highlightpositive";
+    selectedEntry.className = `selected ${highlightClass}`;
 }
 
 function actionClickImpl(name, tired) {
     loadPreviewState();
 
-    document.getElementById("piro-preview-info").hidden = true;
     document.getElementById("preview-header").hidden = false;
     document.getElementById("action-submit").disabled = false;
     document.getElementById("preview-action").textContent = name;
@@ -152,7 +138,6 @@ function hidePreviewIndicators() {
     document.getElementById("action-submit").disabled = true;
 
     document.getElementById("preview-header").hidden = true;
-    document.getElementById("piro-preview-info").hidden = true;
 }
 
 //---------------------//
@@ -162,7 +147,6 @@ function hidePreviewIndicators() {
 function onLoad() {
     document.getElementById("pirouette").addEventListener("click", () => {
         actionClickImpl("Pirouette", 0.5);
-        document.getElementById("piro-preview-info").hidden = false;
     });
     document.getElementById("hypnosis").addEventListener("click", () => {
         actionClickImpl("Hypnosis", 1);
@@ -181,6 +165,10 @@ function onLoad() {
 
         hidePreviewIndicators();
 
+        const entries = document.getElementById("pirouette-table");
+        for (const el of entries.children) {
+            el.className = "";
+        }
         pirouetteCycleStep();
         updateVisibleState();
     });

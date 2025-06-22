@@ -31,6 +31,33 @@ h2 {
     margin: 8px 0;
 }
 
+.piro-outer-container {
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+.piro-outer-container p {
+    margin: 0;
+    margin-bottom: 2px;
+}
+
+.pirouette-table {
+    width: max-content;
+    border: 2px solid darkgray;
+    padding: 8px;
+    padding-left: 25px;
+}
+
+.pirouette-table li {
+    margin-top: 1px;
+    margin-bottom: 1px;
+    list-style-type: none;
+}
+
+.pirouette-table li.selected {
+    list-style-type: "✦ ";
+}
+
 .highlightnegative {
     color: red;
 }
