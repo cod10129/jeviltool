@@ -120,6 +120,7 @@ function actionClickImpl(name, tired) {
 
     document.getElementById("piro-preview-info").hidden = true;
     document.getElementById("preview-header").hidden = false;
+    document.getElementById("action-submit").disabled = false;
     document.getElementById("preview-action").textContent = name;
     jevil.tiredness += tired;
     advanceTurn();
@@ -144,9 +145,11 @@ function loadPreviewState() {
 }
 
 function hidePreviewIndicators() {
+    // Disable all the selectors
     document.getElementById("pirouette").checked = false;
     document.getElementById("hypnosis").checked = false;
     document.getElementById("turn-none").checked = false;
+    document.getElementById("action-submit").disabled = true;
 
     document.getElementById("preview-header").hidden = true;
     document.getElementById("piro-preview-info").hidden = true;

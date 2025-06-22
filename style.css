@@ -47,6 +47,19 @@ h2 {
     color: lightblue;
 }
 
+button {
+    background-color: #f5f5f5;
+    border: outset 2px #e3e3e3;
+    border-radius: 4px;
+    color: black;
+}
+
+button:disabled {
+    background-color: #505050;
+    border: solid 2px #808080;
+    color: #c0c0c0;
+}
+
 #action-submit {
     margin: 8px 0 0;
 }
