@@ -102,8 +102,46 @@ function updatePirouette() {
     selectedEntry.className = `selected ${highlightClass}`;
 }
 
+var prevTurnAttack = "None (first turn)";
+
+/**
+ * Gets the textual description of the attack Jevil would use on
+ * the given phase and turn of that phase.
+ */
+function getAttackText(phase, turn) {
+    //!! FIXME
+    // Using the sequence advance piro hypno piro piro piro hypno <anything>,
+    // The tool predicts BS Carousel is used however the game uses Spiral II.
+    // Even manually following the wiki's algorithm, it seems like Carousel II
+    // is logically the next attack...
+    // What's JEVIL doing??
+    const attackTable = [
+        ["Five-Spade", "Spiral I", "Heart Bombs", "Devilsknife I"],
+        ["Carousel I", "Three-Club Bombs", "Diamonds Rising", "Spiral II"],
+        ["BS Carousel (II)", "Spade Bombs", "Club Bursts", "Devilsknife II"],
+        ["Single Diamonds", "CHAOS BOMB", "Fakeout Attack", "FINAL CHAOS"],
+    ];
+    if (phase < 5) {
+        const phaseAttacks = attackTable[phase - 1];
+        if (turn < 5) {
+            return phaseAttacks[turn - 1];
+        } else {
+            return `Random Phase ${phase} attack (one of ${phaseAttacks[0]},
+                ${phaseAttacks[1]}, ${phaseAttacks[2]}, or ${phaseAttacks[3]})`;
+        }
+    } else {
+        return "Randomly chosen from ALL attacks";
+    }
+}
+
 function actionClickImpl(name, tired) {
     loadPreviewState();
+
+    document.getElementById("prev-attack-desc").hidden = true;
+    document.getElementById("next-attack-desc").hidden = false;
+    recomputeBattlePhase();
+    const atkText = getAttackText(battlePhase, turnsOnCurrentPhase);
+    document.getElementById("next-attack").textContent = atkText;
 
     document.getElementById("preview-header").hidden = false;
     document.getElementById("preview-action").textContent = name;
@@ -113,6 +151,10 @@ function actionClickImpl(name, tired) {
     jevil.tiredness += tired;
     advanceTurn();
 }
+
+//----------------//
+// PREVIEW SYSTEM //
+//----------------//
 
 var previewState = null;
 
@@ -141,6 +183,10 @@ function hidePreviewIndicators() {
     document.getElementById("stop-preview").disabled = true;
 
     document.getElementById("preview-header").hidden = true;
+
+    document.getElementById("prev-attack").textContent = prevTurnAttack;
+    document.getElementById("prev-attack-desc").hidden = false;
+    document.getElementById("next-attack-desc").hidden = true;
 }
 
 //---------------------//
@@ -163,10 +209,10 @@ function onLoad() {
         updateVisibleState();
     });
     document.getElementById("action-submit").addEventListener("click", () => {
+        prevTurnAttack = document.getElementById("next-attack").textContent;
+        hidePreviewIndicators();
         // Current state is the new preview state
         savePreviewState();
-
-        hidePreviewIndicators();
 
         const entries = document.getElementById("pirouette-table");
         for (const el of entries.children) {
@@ -176,6 +222,7 @@ function onLoad() {
         updateVisibleState();
     });
 
+    // updateVisibleState();
     advanceTurn();
     savePreviewState();
 }
