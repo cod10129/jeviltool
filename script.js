@@ -106,8 +106,10 @@ function actionClickImpl(name, tired) {
     loadPreviewState();
 
     document.getElementById("preview-header").hidden = false;
-    document.getElementById("action-submit").disabled = false;
     document.getElementById("preview-action").textContent = name;
+
+    document.getElementById("action-submit").disabled = false;
+    document.getElementById("stop-preview").disabled = false;
     jevil.tiredness += tired;
     advanceTurn();
 }
@@ -136,6 +138,7 @@ function hidePreviewIndicators() {
     document.getElementById("hypnosis").checked = false;
     document.getElementById("turn-none").checked = false;
     document.getElementById("action-submit").disabled = true;
+    document.getElementById("stop-preview").disabled = true;
 
     document.getElementById("preview-header").hidden = true;
 }
