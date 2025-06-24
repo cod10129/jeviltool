@@ -15,11 +15,8 @@ function advanceTurn() {
     turnsElapsed += 1;
     turnsOnCurrentPhase += 1;
 
-    const previousPhase = battlePhase;
+    updateTurnsOnPhase();
     updateVisibleState();
-    if (previousPhase !== battlePhase) {
-        turnsOnCurrentPhase = 1;
-    }
 }
 
 function updateVisibleState() {
@@ -33,8 +30,10 @@ function updateVisibleState() {
 function recomputeBattlePhase() {
     // Don't exit from Phase 5
     if (battlePhase === 5) { return }
+    // Only change phases if the current one is complete
+    if (turnsOnCurrentPhase < 5) { return }
 
-    if (battlePhase === 4 && turnsOnCurrentPhase === 5) {
+    if (battlePhase === 4) {
         battlePhase = 5;
     } else if (jevil.tiredness >= 6) {
         battlePhase = 4;
@@ -44,6 +43,14 @@ function recomputeBattlePhase() {
         battlePhase = 2;
     } else {
         battlePhase = 1;
+    }
+}
+
+function updateTurnsOnPhase() {
+    const previousPhase = battlePhase;
+    recomputeBattlePhase();
+    if (previousPhase !== battlePhase) {
+        turnsOnCurrentPhase = 1;
     }
 }
 
@@ -109,12 +116,6 @@ var prevTurnAttack = "None (first turn)";
  * the given phase and turn of that phase.
  */
 function getAttackText(phase, turn) {
-    //!! FIXME
-    // Using the sequence advance piro hypno piro piro piro hypno <anything>,
-    // The tool predicts BS Carousel is used however the game uses Spiral II.
-    // Even manually following the wiki's algorithm, it seems like Carousel II
-    // is logically the next attack...
-    // What's JEVIL doing??
     const attackTable = [
         ["Five-Spade", "Spiral I", "Heart Bombs", "Devilsknife I"],
         ["Carousel I", "Three-Club Bombs", "Diamonds Rising", "Spiral II"],
@@ -139,7 +140,9 @@ function actionClickImpl(name, tired) {
 
     document.getElementById("prev-attack-desc").hidden = true;
     document.getElementById("next-attack-desc").hidden = false;
-    recomputeBattlePhase();
+
+    jevil.tiredness += tired;
+    updateTurnsOnPhase();
     const atkText = getAttackText(battlePhase, turnsOnCurrentPhase);
     document.getElementById("next-attack").textContent = atkText;
 
@@ -148,7 +151,6 @@ function actionClickImpl(name, tired) {
 
     document.getElementById("action-submit").disabled = false;
     document.getElementById("stop-preview").disabled = false;
-    jevil.tiredness += tired;
     advanceTurn();
 }
 
@@ -222,7 +224,6 @@ function onLoad() {
         updateVisibleState();
     });
 
-    // updateVisibleState();
     advanceTurn();
     savePreviewState();
 }
