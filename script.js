@@ -15,11 +15,8 @@ function advanceTurn() {
     turnsElapsed += 1;
     turnsOnCurrentPhase += 1;
 
-    const previousPhase = battlePhase;
+    updateTurnsOnPhase();
     updateVisibleState();
-    if (previousPhase !== battlePhase) {
-        turnsOnCurrentPhase = 1;
-    }
 }
 
 function updateVisibleState() {
@@ -33,8 +30,10 @@ function updateVisibleState() {
 function recomputeBattlePhase() {
     // Don't exit from Phase 5
     if (battlePhase === 5) { return }
+    // Only change phases if the current one is complete
+    if (turnsOnCurrentPhase < 5) { return }
 
-    if (battlePhase === 4 && turnsOnCurrentPhase === 5) {
+    if (battlePhase === 4) {
         battlePhase = 5;
     } else if (jevil.tiredness >= 6) {
         battlePhase = 4;
@@ -44,6 +43,14 @@ function recomputeBattlePhase() {
         battlePhase = 2;
     } else {
         battlePhase = 1;
+    }
+}
+
+function updateTurnsOnPhase() {
+    const previousPhase = battlePhase;
+    recomputeBattlePhase();
+    if (previousPhase !== battlePhase) {
+        turnsOnCurrentPhase = 1;
     }
 }
 
@@ -102,17 +109,54 @@ function updatePirouette() {
     selectedEntry.className = `selected ${highlightClass}`;
 }
 
+var prevTurnAttack = "None (first turn)";
+
+/**
+ * Gets the textual description of the attack Jevil would use on
+ * the given phase and turn of that phase.
+ */
+function getAttackText(phase, turn) {
+    const attackTable = [
+        ["Five-Spade", "Spiral I", "Heart Bombs", "Devilsknife I"],
+        ["Carousel I", "Three-Club Bombs", "Diamonds Rising", "Spiral II"],
+        ["BS Carousel (II)", "Spade Bombs", "Club Bursts", "Devilsknife II"],
+        ["Single Diamonds", "CHAOS BOMB", "Fakeout Attack", "FINAL CHAOS"],
+    ];
+    if (phase < 5) {
+        const phaseAttacks = attackTable[phase - 1];
+        if (turn < 5) {
+            return phaseAttacks[turn - 1];
+        } else {
+            return `Random Phase ${phase} attack (one of ${phaseAttacks[0]},
+                ${phaseAttacks[1]}, ${phaseAttacks[2]}, or ${phaseAttacks[3]})`;
+        }
+    } else {
+        return "Randomly chosen from ALL attacks";
+    }
+}
+
 function actionClickImpl(name, tired) {
     loadPreviewState();
+
+    document.getElementById("prev-attack-desc").hidden = true;
+    document.getElementById("next-attack-desc").hidden = false;
+
+    jevil.tiredness += tired;
+    updateTurnsOnPhase();
+    const atkText = getAttackText(battlePhase, turnsOnCurrentPhase);
+    document.getElementById("next-attack").textContent = atkText;
 
     document.getElementById("preview-header").hidden = false;
     document.getElementById("preview-action").textContent = name;
 
     document.getElementById("action-submit").disabled = false;
     document.getElementById("stop-preview").disabled = false;
-    jevil.tiredness += tired;
     advanceTurn();
 }
+
+//----------------//
+// PREVIEW SYSTEM //
+//----------------//
 
 var previewState = null;
 
@@ -141,6 +185,10 @@ function hidePreviewIndicators() {
     document.getElementById("stop-preview").disabled = true;
 
     document.getElementById("preview-header").hidden = true;
+
+    document.getElementById("prev-attack").textContent = prevTurnAttack;
+    document.getElementById("prev-attack-desc").hidden = false;
+    document.getElementById("next-attack-desc").hidden = true;
 }
 
 //---------------------//
@@ -163,10 +211,10 @@ function onLoad() {
         updateVisibleState();
     });
     document.getElementById("action-submit").addEventListener("click", () => {
+        prevTurnAttack = document.getElementById("next-attack").textContent;
+        hidePreviewIndicators();
         // Current state is the new preview state
         savePreviewState();
-
-        hidePreviewIndicators();
 
         const entries = document.getElementById("pirouette-table");
         for (const el of entries.children) {
